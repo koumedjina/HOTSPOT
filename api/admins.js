@@ -7,7 +7,7 @@ const supabase = createClient(
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
@@ -21,10 +21,11 @@ export default async function handler(req, res) {
       .select('*, locations(*)')
       .eq('username', username)
       .eq('password', password)
+      .eq('is_active', true)
       .single();
 
     if (error || !admin) {
-      return res.status(401).json({ error: 'Identifiants incorrects' });
+      return res.status(401).json({ error: 'Identifiants incorrects ou compte bloqué' });
     }
 
     return res.status(200).json({
@@ -38,11 +39,11 @@ export default async function handler(req, res) {
     });
   }
 
-  // GET - liste tous les admins (super admin seulement)
+  // GET - liste tous les admins
   if (req.method === 'GET') {
     const { data, error } = await supabase
       .from('admins')
-      .select('id, username, is_super, created_at, locations(name)')
+      .select('id, username, is_super, is_active, created_at, locations(name)')
       .order('created_at', { ascending: false });
 
     if (error) return res.status(500).json({ error: error.message });
@@ -65,6 +66,21 @@ export default async function handler(req, res) {
 
     if (error) return res.status(500).json({ error: error.message });
     return res.status(201).json(data);
+  }
+
+  // PUT - bloquer ou débloquer un admin
+  if (req.method === 'PUT') {
+    const { id, is_active } = req.body;
+
+    if (!id) return res.status(400).json({ error: 'ID requis' });
+
+    const { error } = await supabase
+      .from('admins')
+      .update({ is_active })
+      .eq('id', id);
+
+    if (error) return res.status(500).json({ error: error.message });
+    return res.status(200).json({ success: true });
   }
 
   // DELETE - supprimer un admin
