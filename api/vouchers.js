@@ -5,6 +5,15 @@ const supabase = createClient(
   process.env.SUPABASE_SECRET_KEY
 );
 
+function generateCode(prefix = '') {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = prefix ? prefix + '-' : '';
+  for (let i = 0; i < 6; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -23,10 +32,40 @@ export default async function handler(req, res) {
     return res.status(200).json(data);
   }
 
-  // POST - créer un voucher
+  // POST - créer un ou plusieurs vouchers
   if (req.method === 'POST') {
-    const { code, duration_h, max_uses, location_id } = req.body;
+    const { code, duration_h, max_uses, location_id, quantity, prefix } = req.body;
 
+    // Génération en masse
+    if (quantity && quantity > 1) {
+      const vouchers = [];
+      const usedCodes = new Set();
+
+      for (let i = 0; i < quantity; i++) {
+        let newCode;
+        do {
+          newCode = generateCode(prefix || '');
+        } while (usedCodes.has(newCode));
+        usedCodes.add(newCode);
+
+        vouchers.push({
+          code: newCode,
+          duration_h: duration_h || 1,
+          max_uses: max_uses || 1,
+          location_id: location_id || null
+        });
+      }
+
+      const { data, error } = await supabase
+        .from('vouchers')
+        .insert(vouchers)
+        .select();
+
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(201).json({ success: true, count: data.length, vouchers: data });
+    }
+
+    // Création simple
     if (!code) return res.status(400).json({ error: 'Code requis' });
 
     const { data, error } = await supabase
@@ -42,7 +81,6 @@ export default async function handler(req, res) {
   // PUT - bloquer ou activer un voucher
   if (req.method === 'PUT') {
     const { id, is_active } = req.body;
-
     if (!id) return res.status(400).json({ error: 'ID requis' });
 
     const { error } = await supabase
@@ -57,7 +95,6 @@ export default async function handler(req, res) {
   // DELETE - supprimer un voucher
   if (req.method === 'DELETE') {
     const { id } = req.body;
-
     if (!id) return res.status(400).json({ error: 'ID requis' });
 
     const { error } = await supabase
