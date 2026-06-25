@@ -7,42 +7,45 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: sans-serif; background: #f0f4f8; min-height: 100vh; }
-    .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #1a1a2e, #4f46e5); }
+    .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #1e3a5f, #4f46e5); }
     .login-card { background: white; border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 380px; box-shadow: 0 8px 40px rgba(0,0,0,0.2); }
-    .login-card h2 { font-size: 22px; color: #1a1a2e; margin-bottom: 0.5rem; text-align: center; }
+    .login-card h2 { font-size: 22px; color: #1e3a5f; margin-bottom: 0.5rem; text-align: center; }
     .login-card p { font-size: 13px; color: #888; text-align: center; margin-bottom: 1.5rem; }
     .app { display: flex; min-height: 100vh; }
-    .sidebar { width: 240px; background: #1a1a2e; min-height: 100vh; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; }
-    .sidebar-logo { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
+
+    /* SIDEBAR - couleur plus douce bleu marine */
+    .sidebar { width: 240px; background: #1e3a5f; min-height: 100vh; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; }
+    .sidebar-logo { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
     .sidebar-logo h1 { color: white; font-size: 18px; font-weight: 700; }
-    .sidebar-logo p { color: #a5b4fc; font-size: 12px; margin-top: 2px; }
+    .sidebar-logo p { color: #93c5fd; font-size: 12px; margin-top: 2px; }
     .sidebar-nav { padding: 1rem 0; flex: 1; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #94a3b8; font-size: 14px; cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; }
-    .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
-    .nav-item.active { background: rgba(79,70,229,0.2); color: white; border-left-color: #4f46e5; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #bfdbfe; font-size: 14px; cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; }
+    .nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .nav-item.active { background: rgba(99,102,241,0.3); color: white; border-left-color: #818cf8; }
     .nav-item .icon { font-size: 18px; width: 24px; text-align: center; }
-    .sidebar-footer { padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.08); }
+    .sidebar-footer { padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.1); }
     .user-info { display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: #4f46e5; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 600; }
+    .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: #4f46e5; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 600; flex-shrink: 0; }
     .user-name { color: white; font-size: 13px; font-weight: 500; }
-    .user-role { color: #a5b4fc; font-size: 11px; }
-    .logout-btn { margin-top: 10px; width: 100%; padding: 8px; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #94a3b8; border-radius: 6px; cursor: pointer; font-size: 12px; }
-    .logout-btn:hover { background: rgba(255,255,255,0.05); color: white; }
+    .user-role { color: #93c5fd; font-size: 11px; }
+    .logout-btn { margin-top: 10px; width: 100%; padding: 8px; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #bfdbfe; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .logout-btn:hover { background: rgba(255,255,255,0.08); color: white; }
+
     .main-content { margin-left: 240px; flex: 1; padding: 2rem; }
-    .page-title { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 1.5rem; }
+    .page-title { font-size: 22px; font-weight: 700; color: #1e3a5f; margin-bottom: 1.5rem; }
     .section { display: none; } .section.active { display: block; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
     .stat-box { background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid #4f46e5; }
     .stat-box.green { border-left-color: #16a34a; } .stat-box.orange { border-left-color: #ea580c; } .stat-box.blue { border-left-color: #2563eb; }
     .stat-box h3 { font-size: 12px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-box .val { font-size: 32px; font-weight: 700; color: #1a1a2e; }
+    .stat-box .val { font-size: 32px; font-weight: 700; color: #1e3a5f; }
     label { font-size: 13px; color: #555; display: block; margin-bottom: 6px; margin-top: 12px; }
     input, select { width: 100%; padding: 10px 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; outline: none; }
     input:focus, select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
     .form-box { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 1.5rem; }
-    .form-box h3 { font-size: 15px; font-weight: 600; color: #1a1a2e; margin-bottom: 0.5rem; }
+    .form-box h3 { font-size: 15px; font-weight: 600; color: #1e3a5f; margin-bottom: 0.5rem; }
     .form-box p { font-size: 12px; color: #888; margin-bottom: 1rem; }
     .btn { padding: 10px 20px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: 500; margin-top: 14px; }
     .btn:hover { background: #4338ca; }
@@ -51,7 +54,7 @@
     .tab-inner { padding: 7px 16px; border-radius: 6px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 13px; color: #555; }
     .tab-inner.active { background: #4f46e5; color: white; border-color: #4f46e5; }
     .table-box { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .table-header { padding: 1rem 1.25rem; border-bottom: 1px solid #f0f0f0; font-size: 15px; font-weight: 600; color: #1a1a2e; }
+    .table-header { padding: 1rem 1.25rem; border-bottom: 1px solid #f0f0f0; font-size: 15px; font-weight: 600; color: #1e3a5f; }
     table { width: 100%; border-collapse: collapse; }
     th { background: #f8fafc; padding: 10px 16px; text-align: left; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
     td { padding: 12px 16px; font-size: 13px; color: #333; border-top: 1px solid #f5f5f5; vertical-align: middle; }
@@ -65,18 +68,19 @@
     .msg.success { background: #f0fdf4; color: #16a34a; display: block; }
     .bulk-result { background: #f8fafc; border-radius: 8px; padding: 1rem; margin-top: 1rem; max-height: 200px; overflow-y: auto; }
     .bulk-code { display: inline-block; font-family: monospace; font-size: 13px; background: #e0e7ff; color: #3730a3; padding: 3px 8px; border-radius: 4px; margin: 3px; }
-    .print-btn { margin-top: 10px; padding: 8px 16px; background: #1a1a2e; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
+    .print-btn { margin-top: 10px; padding: 8px 16px; background: #1e3a5f; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
 
     /* TOGGLE SWITCH */
-    .toggle { position: relative; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
-    .toggle-input { display: none; }
-    .toggle-track { width: 46px; height: 26px; background: #dc2626; border-radius: 26px; transition: background 0.3s; position: relative; }
-    .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: transform 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
-    .toggle-input:checked ~ .toggle-track { background: #16a34a; }
-    .toggle-input:checked ~ .toggle-track .toggle-thumb { transform: translateX(20px); }
-    .toggle-text { font-size: 12px; font-weight: 600; min-width: 28px; }
-    .toggle-text.on { color: #16a34a; }
-    .toggle-text.off { color: #dc2626; }
+    .tog { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+    .tog-track { width: 46px; height: 26px; border-radius: 26px; position: relative; transition: background 0.3s; flex-shrink: 0; }
+    .tog-track.on { background: #16a34a; }
+    .tog-track.off { background: #dc2626; }
+    .tog-thumb { position: absolute; top: 3px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: left 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+    .tog-track.on .tog-thumb { left: 23px; }
+    .tog-track.off .tog-thumb { left: 3px; }
+    .tog-text { font-size: 12px; font-weight: 600; min-width: 28px; }
+    .tog-text.on { color: #16a34a; }
+    .tog-text.off { color: #dc2626; }
   </style>
 </head>
 <body>
@@ -84,7 +88,7 @@
 <!-- LOGIN -->
 <div class="login-wrap" id="loginPage">
   <div class="login-card">
-    <h2>🔐 Hotspot Admin</h2>
+    <h2>📡 Hotspot Admin</h2>
     <p>Connectez-vous pour gérer votre réseau</p>
     <label>Nom d'utilisateur</label>
     <input type="text" id="loginUser" placeholder="superadmin" />
@@ -250,57 +254,54 @@
 let currentAdmin = null;
 let lastBulkCodes = [];
 
-function toggle(id, currentState, apiFn) {
-  const track = document.getElementById('track_' + id);
-  const thumb = document.getElementById('thumb_' + id);
-  const text = document.getElementById('text_' + id);
-  const badge = document.getElementById('badge_' + id);
-  if (!track) return;
+// Stocke l'etat actuel de chaque toggle
+const states = {};
 
-  const newState = !currentState;
-
-  // Mise a jour visuelle immediate
-  if (newState) {
-    track.style.background = '#16a34a';
-    thumb.style.transform = 'translateX(20px)';
-    text.textContent = 'ON';
-    text.className = 'toggle-text on';
-    if (badge) { badge.textContent = 'Actif'; badge.className = 'badge badge-green'; }
-  } else {
-    track.style.background = '#dc2626';
-    thumb.style.transform = 'translateX(0)';
-    text.textContent = 'OFF';
-    text.className = 'toggle-text off';
-    if (badge) { badge.textContent = 'Inactif'; badge.className = 'badge badge-red'; }
-  }
-
-  // Envoyer a l'API
-  apiFn(id, newState);
-
-  // Mettre a jour l'etat local
-  track.dataset.state = newState ? 'on' : 'off';
-}
-
-function makeToggleHTML(id, isActive) {
-  return `<div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="toggle('${id}', ${isActive}, currentToggleFn)">
-    <div id="track_${id}" style="width:46px;height:26px;background:${isActive?'#16a34a':'#dc2626'};border-radius:26px;position:relative;transition:background 0.3s;cursor:pointer" data-state="${isActive?'on':'off'}">
-      <div id="thumb_${id}" style="position:absolute;top:3px;left:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform 0.3s;box-shadow:0 1px 4px rgba(0,0,0,0.3);transform:${isActive?'translateX(20px)':'translateX(0)'}"></div>
+function makeTog(id, isActive, fn) {
+  states[id] = isActive;
+  return `<div class="tog" onclick="handleTog('${id}','${fn}')">
+    <div class="tog-track ${isActive?'on':'off'}" id="tr_${id}">
+      <div class="tog-thumb"></div>
     </div>
-    <span id="text_${id}" class="toggle-text ${isActive?'on':'off'}">${isActive?'ON':'OFF'}</span>
+    <span class="tog-text ${isActive?'on':'off'}" id="tt_${id}">${isActive?'ON':'OFF'}</span>
   </div>`;
 }
 
-let currentToggleFn = null;
+async function handleTog(id, fn) {
+  const newState = !states[id];
+  states[id] = newState;
+
+  const track = document.getElementById('tr_'+id);
+  const text = document.getElementById('tt_'+id);
+  const badge = document.getElementById('bg_'+id);
+
+  if (track) {
+    track.className = 'tog-track ' + (newState?'on':'off');
+  }
+  if (text) {
+    text.textContent = newState?'ON':'OFF';
+    text.className = 'tog-text ' + (newState?'on':'off');
+  }
+  if (badge) {
+    badge.textContent = newState?'Actif':'Inactif';
+    badge.className = 'badge ' + (newState?'badge-green':'badge-red');
+  }
+
+  if (fn === 'v') await fetch('/api/vouchers',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active:newState})});
+  if (fn === 'l') await fetch('/api/locations',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active:newState})});
+  if (fn === 'a') await fetch('/api/admins',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active:newState})});
+  if (fn === 's') await fetch('/api/sessions',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active:newState})});
+}
 
 async function doLogin() {
   const username = document.getElementById('loginUser').value.trim();
   const password = document.getElementById('loginPass').value.trim();
   const msg = document.getElementById('loginMsg');
-  if (!username || !password) { msg.className='msg error'; msg.textContent='Remplis tous les champs.'; return; }
+  if (!username||!password) { msg.className='msg error'; msg.textContent='Remplis tous les champs.'; return; }
   try {
-    const res = await fetch('/api/admins?action=login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,password}) });
+    const res = await fetch('/api/admins?action=login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
     const data = await res.json();
-    if (res.ok && data.success) {
+    if (res.ok&&data.success) {
       currentAdmin = data.admin;
       document.getElementById('loginPage').style.display='none';
       document.getElementById('dashPage').style.display='flex';
@@ -319,14 +320,14 @@ function logout() {
   document.getElementById('dashPage').style.display='none';
 }
 
-function showTab(name, el) {
+function showTab(name,el) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   el.classList.add('active');
 }
 
-function showVoucherTab(name, el) {
+function showVoucherTab(name,el) {
   document.getElementById('vSingle').style.display=name==='single'?'block':'none';
   document.getElementById('vBulk').style.display=name==='bulk'?'block':'none';
   document.querySelectorAll('.tab-inner').forEach(t=>t.classList.remove('active'));
@@ -335,23 +336,9 @@ function showVoucherTab(name, el) {
 
 async function loadAll() { loadVouchers(); loadSessions(); loadLocations(); if(currentAdmin&&currentAdmin.is_super) loadAdmins(); }
 
-async function toggleVoucherFn(id, is_active) {
-  await fetch('/api/vouchers',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
-}
-async function toggleLocationFn(id, is_active) {
-  await fetch('/api/locations',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
-}
-async function toggleAdminFn(id, is_active) {
-  await fetch('/api/admins',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
-}
-async function toggleSessionFn(id, is_active) {
-  await fetch('/api/sessions',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
-}
-
 async function loadVouchers() {
-  currentToggleFn = toggleVoucherFn;
   const res = await fetch('/api/vouchers').catch(()=>null);
-  const data = res ? await res.json().catch(()=>[]) : [];
+  const data = res?await res.json().catch(()=>[]):[];
   const tbody = document.getElementById('voucherList');
   if (!Array.isArray(data)) { tbody.innerHTML='<tr><td colspan="5">Aucun voucher</td></tr>'; return; }
   document.getElementById('statVouchers').textContent=data.filter(v=>v.is_active).length;
@@ -359,14 +346,14 @@ async function loadVouchers() {
     <td><strong>${v.code}</strong></td>
     <td>${v.duration_h}h</td>
     <td>${v.used_count}/${v.max_uses}</td>
-    <td><span id="badge_${v.id}" class="badge ${v.is_active?'badge-green':'badge-red'}">${v.is_active?'Actif':'Inactif'}</span></td>
-    <td onclick="currentToggleFn=toggleVoucherFn">${makeToggleHTML(v.id, v.is_active)}</td>
+    <td><span id="bg_${v.id}" class="badge ${v.is_active?'badge-green':'badge-red'}">${v.is_active?'Actif':'Inactif'}</span></td>
+    <td>${makeTog(v.id,v.is_active,'v')}</td>
   </tr>`).join('');
 }
 
 async function loadSessions() {
   const res = await fetch('/api/sessions').catch(()=>null);
-  const data = res ? await res.json().catch(()=>[]) : [];
+  const data = res?await res.json().catch(()=>[]):[];
   const tbody = document.getElementById('sessionList');
   if (!Array.isArray(data)) { tbody.innerHTML='<tr><td colspan="6">Aucune session</td></tr>'; return; }
   document.getElementById('statSessions').textContent=data.filter(s=>s.is_active).length;
@@ -374,14 +361,14 @@ async function loadSessions() {
     <td>${s.mac_address}</td><td>${s.ip_address||'-'}</td>
     <td>${new Date(s.started_at).toLocaleString()}</td>
     <td>${new Date(s.expires_at).toLocaleString()}</td>
-    <td><span id="badge_${s.id}" class="badge ${s.is_active?'badge-green':'badge-red'}">${s.is_active?'Active':'Expirée'}</span></td>
-    <td onclick="currentToggleFn=toggleSessionFn">${makeToggleHTML(s.id, s.is_active)}</td>
+    <td><span id="bg_${s.id}" class="badge ${s.is_active?'badge-green':'badge-red'}">${s.is_active?'Active':'Expirée'}</span></td>
+    <td>${makeTog(s.id,s.is_active,'s')}</td>
   </tr>`).join('');
 }
 
 async function loadLocations() {
   const res = await fetch('/api/locations').catch(()=>null);
-  const data = res ? await res.json().catch(()=>[]) : [];
+  const data = res?await res.json().catch(()=>[]):[];
   document.getElementById('statLocations').textContent=Array.isArray(data)?data.length:0;
   const opts=Array.isArray(data)?data.map(l=>`<option value="${l.id}">${l.name}</option>`).join(''):'';
   ['vLocation','bLocation','aLocation'].forEach(id=>{
@@ -394,14 +381,14 @@ async function loadLocations() {
     <td><strong>${l.name}</strong></td>
     <td>${l.owner_name||'-'}</td>
     <td>${l.address||'-'}</td>
-    <td><span id="badge_${l.id}" class="badge ${l.is_active?'badge-green':'badge-red'}">${l.is_active?'Actif':'Inactif'}</span></td>
-    <td onclick="currentToggleFn=toggleLocationFn">${makeToggleHTML(l.id, l.is_active)}</td>
+    <td><span id="bg_${l.id}" class="badge ${l.is_active?'badge-green':'badge-red'}">${l.is_active?'Actif':'Inactif'}</span></td>
+    <td>${makeTog(l.id,l.is_active,'l')}</td>
   </tr>`).join('');
 }
 
 async function loadAdmins() {
   const res = await fetch('/api/admins').catch(()=>null);
-  const data = res ? await res.json().catch(()=>[]) : [];
+  const data = res?await res.json().catch(()=>[]):[];
   document.getElementById('statAdmins').textContent=Array.isArray(data)?data.filter(a=>a.is_active).length:0;
   const tbody=document.getElementById('adminList');
   if (!Array.isArray(data)||!tbody) return;
@@ -409,8 +396,8 @@ async function loadAdmins() {
     <td>${a.username}</td>
     <td><span class="badge ${a.is_super?'badge-blue':'badge-green'}">${a.is_super?'Super Admin':'Admin Local'}</span></td>
     <td>${a.locations?a.locations.name:'Tous'}</td>
-    <td><span id="badge_${a.id}" class="badge ${a.is_active?'badge-green':'badge-red'}">${a.is_active?'Actif':'Bloqué'}</span></td>
-    <td>${!a.is_super?`<div onclick="currentToggleFn=toggleAdminFn">${makeToggleHTML(a.id, a.is_active)}</div>`:'<span class="badge badge-blue">Super</span>'}</td>
+    <td><span id="bg_${a.id}" class="badge ${a.is_active?'badge-green':'badge-red'}">${a.is_active?'Actif':'Bloqué'}</span></td>
+    <td>${!a.is_super?makeTog(a.id,a.is_active,'a'):'<span class="badge badge-blue">Super</span>'}</td>
   </tr>`).join('');
 }
 
@@ -436,7 +423,7 @@ async function generateBulk() {
 
 function printCodes() {
   const win=window.open('','_blank');
-  win.document.write('<html><head><title>Vouchers WiFi</title><style>body{font-family:sans-serif;padding:2rem}h2{margin-bottom:1rem}.code{display:inline-block;border:2px dashed #4f46e5;padding:10px 20px;margin:8px;border-radius:8px;font-size:18px;font-weight:bold;font-family:monospace;color:#1a1a2e}@media print{.no-print{display:none}}</style></head><body><h2>Codes WiFi Hotspot</h2><button class="no-print" onclick="window.print()" style="margin-bottom:1rem;padding:8px 16px;cursor:pointer">Imprimer</button>'+lastBulkCodes.map(c=>'<div class="code">'+c+'</div>').join('')+'</body></html>');
+  win.document.write('<html><head><title>Vouchers WiFi</title><style>body{font-family:sans-serif;padding:2rem}h2{margin-bottom:1rem}.code{display:inline-block;border:2px dashed #4f46e5;padding:10px 20px;margin:8px;border-radius:8px;font-size:18px;font-weight:bold;font-family:monospace;color:#1e3a5f}@media print{.no-print{display:none}}</style></head><body><h2>Codes WiFi Hotspot</h2><button class="no-print" onclick="window.print()" style="margin-bottom:1rem;padding:8px 16px;cursor:pointer">Imprimer</button>'+lastBulkCodes.map(c=>'<div class="code">'+c+'</div>').join('')+'</body></html>');
   win.document.close();
 }
 
