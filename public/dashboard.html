@@ -54,10 +54,12 @@
     .table-header { padding: 1rem 1.25rem; border-bottom: 1px solid #f0f0f0; font-size: 15px; font-weight: 600; color: #1a1a2e; }
     table { width: 100%; border-collapse: collapse; }
     th { background: #f8fafc; padding: 10px 16px; text-align: left; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
-    td { padding: 12px 16px; font-size: 13px; color: #333; border-top: 1px solid #f5f5f5; }
+    td { padding: 12px 16px; font-size: 13px; color: #333; border-top: 1px solid #f5f5f5; vertical-align: middle; }
     tr:hover td { background: #fafafa; }
     .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
-    .badge-green { background: #dcfce7; color: #16a34a; } .badge-red { background: #fee2e2; color: #dc2626; } .badge-blue { background: #dbeafe; color: #2563eb; }
+    .badge-green { background: #dcfce7; color: #16a34a; }
+    .badge-red { background: #fee2e2; color: #dc2626; }
+    .badge-blue { background: #dbeafe; color: #2563eb; }
     .msg { margin-top: 12px; padding: 10px; border-radius: 8px; font-size: 13px; display: none; }
     .msg.error { background: #fef2f2; color: #dc2626; display: block; }
     .msg.success { background: #f0fdf4; color: #16a34a; display: block; }
@@ -66,16 +68,15 @@
     .print-btn { margin-top: 10px; padding: 8px 16px; background: #1a1a2e; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
 
     /* TOGGLE SWITCH */
-    .toggle-wrap { display: flex; align-items: center; gap: 8px; }
-    .toggle { position: relative; width: 44px; height: 24px; cursor: pointer; }
-    .toggle input { opacity: 0; width: 0; height: 0; }
-    .toggle-slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #dc2626; border-radius: 24px; transition: 0.3s; }
-    .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-    .toggle input:checked + .toggle-slider { background: #16a34a; }
-    .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
-    .toggle-label { font-size: 12px; font-weight: 500; }
-    .toggle-label.on { color: #16a34a; }
-    .toggle-label.off { color: #dc2626; }
+    .toggle { position: relative; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+    .toggle-input { display: none; }
+    .toggle-track { width: 46px; height: 26px; background: #dc2626; border-radius: 26px; transition: background 0.3s; position: relative; }
+    .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: transform 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+    .toggle-input:checked ~ .toggle-track { background: #16a34a; }
+    .toggle-input:checked ~ .toggle-track .toggle-thumb { transform: translateX(20px); }
+    .toggle-text { font-size: 12px; font-weight: 600; min-width: 28px; }
+    .toggle-text.on { color: #16a34a; }
+    .toggle-text.off { color: #dc2626; }
   </style>
 </head>
 <body>
@@ -176,7 +177,7 @@
       <div class="table-box">
         <div class="table-header">Liste des vouchers</div>
         <table>
-          <thead><tr><th>Code</th><th>Durée</th><th>Utilisations</th><th>Statut</th><th>Actif</th></tr></thead>
+          <thead><tr><th>Code</th><th>Durée</th><th>Utilisations</th><th>Statut</th><th>Actions</th></tr></thead>
           <tbody id="voucherList"></tbody>
         </table>
       </div>
@@ -188,7 +189,7 @@
       <div class="table-box">
         <div class="table-header">Clients connectés</div>
         <table>
-          <thead><tr><th>MAC</th><th>IP</th><th>Début</th><th>Expiration</th><th>Statut</th><th>Action</th></tr></thead>
+          <thead><tr><th>MAC</th><th>IP</th><th>Début</th><th>Expiration</th><th>Statut</th><th>Actions</th></tr></thead>
           <tbody id="sessionList"></tbody>
         </table>
       </div>
@@ -212,7 +213,7 @@
       <div class="table-box">
         <div class="table-header">Liste des endroits</div>
         <table>
-          <thead><tr><th>Nom</th><th>Responsable</th><th>Adresse</th><th>Actif</th></tr></thead>
+          <thead><tr><th>Nom</th><th>Responsable</th><th>Adresse</th><th>Statut</th><th>Actions</th></tr></thead>
           <tbody id="locationList"></tbody>
         </table>
       </div>
@@ -236,7 +237,7 @@
       <div class="table-box">
         <div class="table-header">Liste des admins</div>
         <table>
-          <thead><tr><th>Utilisateur</th><th>Rôle</th><th>Endroit</th><th>Actif</th></tr></thead>
+          <thead><tr><th>Utilisateur</th><th>Rôle</th><th>Endroit</th><th>Statut</th><th>Actions</th></tr></thead>
           <tbody id="adminList"></tbody>
         </table>
       </div>
@@ -249,20 +250,47 @@
 let currentAdmin = null;
 let lastBulkCodes = [];
 
-function makeToggle(id, isActive, onChangeFn) {
-  const uid = 'toggle_' + id.replace(/-/g,'');
-  setTimeout(() => {
-    const el = document.getElementById(uid);
-    if (el) el.addEventListener('change', () => onChangeFn(id, el.checked));
-  }, 50);
-  return `<div class="toggle-wrap">
-    <label class="toggle">
-      <input type="checkbox" id="${uid}" ${isActive ? 'checked' : ''}>
-      <span class="toggle-slider"></span>
-    </label>
-    <span class="toggle-label ${isActive ? 'on' : 'off'}">${isActive ? 'ON' : 'OFF'}</span>
+function toggle(id, currentState, apiFn) {
+  const track = document.getElementById('track_' + id);
+  const thumb = document.getElementById('thumb_' + id);
+  const text = document.getElementById('text_' + id);
+  const badge = document.getElementById('badge_' + id);
+  if (!track) return;
+
+  const newState = !currentState;
+
+  // Mise a jour visuelle immediate
+  if (newState) {
+    track.style.background = '#16a34a';
+    thumb.style.transform = 'translateX(20px)';
+    text.textContent = 'ON';
+    text.className = 'toggle-text on';
+    if (badge) { badge.textContent = 'Actif'; badge.className = 'badge badge-green'; }
+  } else {
+    track.style.background = '#dc2626';
+    thumb.style.transform = 'translateX(0)';
+    text.textContent = 'OFF';
+    text.className = 'toggle-text off';
+    if (badge) { badge.textContent = 'Inactif'; badge.className = 'badge badge-red'; }
+  }
+
+  // Envoyer a l'API
+  apiFn(id, newState);
+
+  // Mettre a jour l'etat local
+  track.dataset.state = newState ? 'on' : 'off';
+}
+
+function makeToggleHTML(id, isActive) {
+  return `<div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="toggle('${id}', ${isActive}, currentToggleFn)">
+    <div id="track_${id}" style="width:46px;height:26px;background:${isActive?'#16a34a':'#dc2626'};border-radius:26px;position:relative;transition:background 0.3s;cursor:pointer" data-state="${isActive?'on':'off'}">
+      <div id="thumb_${id}" style="position:absolute;top:3px;left:3px;width:20px;height:20px;background:white;border-radius:50%;transition:transform 0.3s;box-shadow:0 1px 4px rgba(0,0,0,0.3);transform:${isActive?'translateX(20px)':'translateX(0)'}"></div>
+    </div>
+    <span id="text_${id}" class="toggle-text ${isActive?'on':'off'}">${isActive?'ON':'OFF'}</span>
   </div>`;
 }
+
+let currentToggleFn = null;
 
 async function doLogin() {
   const username = document.getElementById('loginUser').value.trim();
@@ -307,7 +335,21 @@ function showVoucherTab(name, el) {
 
 async function loadAll() { loadVouchers(); loadSessions(); loadLocations(); if(currentAdmin&&currentAdmin.is_super) loadAdmins(); }
 
+async function toggleVoucherFn(id, is_active) {
+  await fetch('/api/vouchers',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
+}
+async function toggleLocationFn(id, is_active) {
+  await fetch('/api/locations',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
+}
+async function toggleAdminFn(id, is_active) {
+  await fetch('/api/admins',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
+}
+async function toggleSessionFn(id, is_active) {
+  await fetch('/api/sessions',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
+}
+
 async function loadVouchers() {
+  currentToggleFn = toggleVoucherFn;
   const res = await fetch('/api/vouchers').catch(()=>null);
   const data = res ? await res.json().catch(()=>[]) : [];
   const tbody = document.getElementById('voucherList');
@@ -317,8 +359,8 @@ async function loadVouchers() {
     <td><strong>${v.code}</strong></td>
     <td>${v.duration_h}h</td>
     <td>${v.used_count}/${v.max_uses}</td>
-    <td><span class="badge ${v.is_active?'badge-green':'badge-red'}">${v.is_active?'Actif':'Inactif'}</span></td>
-    <td>${makeToggle(v.id, v.is_active, toggleVoucher)}</td>
+    <td><span id="badge_${v.id}" class="badge ${v.is_active?'badge-green':'badge-red'}">${v.is_active?'Actif':'Inactif'}</span></td>
+    <td onclick="currentToggleFn=toggleVoucherFn">${makeToggleHTML(v.id, v.is_active)}</td>
   </tr>`).join('');
 }
 
@@ -332,8 +374,8 @@ async function loadSessions() {
     <td>${s.mac_address}</td><td>${s.ip_address||'-'}</td>
     <td>${new Date(s.started_at).toLocaleString()}</td>
     <td>${new Date(s.expires_at).toLocaleString()}</td>
-    <td><span class="badge ${s.is_active?'badge-green':'badge-red'}">${s.is_active?'Active':'Expirée'}</span></td>
-    <td>${makeToggle(s.id, s.is_active, toggleSession)}</td>
+    <td><span id="badge_${s.id}" class="badge ${s.is_active?'badge-green':'badge-red'}">${s.is_active?'Active':'Expirée'}</span></td>
+    <td onclick="currentToggleFn=toggleSessionFn">${makeToggleHTML(s.id, s.is_active)}</td>
   </tr>`).join('');
 }
 
@@ -352,7 +394,8 @@ async function loadLocations() {
     <td><strong>${l.name}</strong></td>
     <td>${l.owner_name||'-'}</td>
     <td>${l.address||'-'}</td>
-    <td>${makeToggle(l.id, l.is_active, toggleLocation)}</td>
+    <td><span id="badge_${l.id}" class="badge ${l.is_active?'badge-green':'badge-red'}">${l.is_active?'Actif':'Inactif'}</span></td>
+    <td onclick="currentToggleFn=toggleLocationFn">${makeToggleHTML(l.id, l.is_active)}</td>
   </tr>`).join('');
 }
 
@@ -366,25 +409,9 @@ async function loadAdmins() {
     <td>${a.username}</td>
     <td><span class="badge ${a.is_super?'badge-blue':'badge-green'}">${a.is_super?'Super Admin':'Admin Local'}</span></td>
     <td>${a.locations?a.locations.name:'Tous'}</td>
-    <td>${!a.is_super ? makeToggle(a.id, a.is_active, toggleAdmin) : '<span class="badge badge-blue">Super</span>'}</td>
+    <td><span id="badge_${a.id}" class="badge ${a.is_active?'badge-green':'badge-red'}">${a.is_active?'Actif':'Bloqué'}</span></td>
+    <td>${!a.is_super?`<div onclick="currentToggleFn=toggleAdminFn">${makeToggleHTML(a.id, a.is_active)}</div>`:'<span class="badge badge-blue">Super</span>'}</td>
   </tr>`).join('');
-}
-
-async function toggleVoucher(id, is_active) {
-  await fetch('/api/vouchers',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
-  loadVouchers();
-}
-async function toggleLocation(id, is_active) {
-  await fetch('/api/locations',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
-  loadLocations();
-}
-async function toggleAdmin(id, is_active) {
-  await fetch('/api/admins',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
-  loadAdmins();
-}
-async function toggleSession(id, is_active) {
-  await fetch('/api/sessions',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
-  loadSessions();
 }
 
 async function generateBulk() {
@@ -394,12 +421,12 @@ async function generateBulk() {
   const prefix=document.getElementById('bPrefix').value.trim();
   const location_id=document.getElementById('bLocation').value;
   const msg=document.getElementById('bMsg');
-  if (!quantity||quantity<1) { msg.className='msg error'; msg.textContent='Quantité invalide.'; return; }
-  msg.className='msg success'; msg.textContent='Génération en cours...';
+  if (!quantity||quantity<1) { msg.className='msg error'; msg.textContent='Quantite invalide.'; return; }
+  msg.className='msg success'; msg.textContent='Generation en cours...';
   const res=await fetch('/api/vouchers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({quantity,duration_h,max_uses,prefix,location_id:location_id||null})});
   const data=await res.json();
   if (res.ok&&data.success) {
-    msg.className='msg success'; msg.textContent='✅ '+data.count+' vouchers créés !';
+    msg.className='msg success'; msg.textContent='OK - '+data.count+' vouchers crees !';
     lastBulkCodes=data.vouchers.map(v=>v.code);
     document.getElementById('bulkResult').style.display='block';
     document.getElementById('bulkCodes').innerHTML=lastBulkCodes.map(c=>'<span class="bulk-code">'+c+'</span>').join('');
@@ -409,7 +436,7 @@ async function generateBulk() {
 
 function printCodes() {
   const win=window.open('','_blank');
-  win.document.write('<html><head><title>Vouchers WiFi</title><style>body{font-family:sans-serif;padding:2rem}h2{margin-bottom:1rem}.code{display:inline-block;border:2px dashed #4f46e5;padding:10px 20px;margin:8px;border-radius:8px;font-size:18px;font-weight:bold;font-family:monospace;color:#1a1a2e}@media print{.no-print{display:none}}</style></head><body><h2>Codes WiFi Hotspot</h2><button class="no-print" onclick="window.print()" style="margin-bottom:1rem;padding:8px 16px;cursor:pointer">🖨️ Imprimer</button>'+lastBulkCodes.map(c=>'<div class="code">'+c+'</div>').join('')+'</body></html>');
+  win.document.write('<html><head><title>Vouchers WiFi</title><style>body{font-family:sans-serif;padding:2rem}h2{margin-bottom:1rem}.code{display:inline-block;border:2px dashed #4f46e5;padding:10px 20px;margin:8px;border-radius:8px;font-size:18px;font-weight:bold;font-family:monospace;color:#1a1a2e}@media print{.no-print{display:none}}</style></head><body><h2>Codes WiFi Hotspot</h2><button class="no-print" onclick="window.print()" style="margin-bottom:1rem;padding:8px 16px;cursor:pointer">Imprimer</button>'+lastBulkCodes.map(c=>'<div class="code">'+c+'</div>').join('')+'</body></html>');
   win.document.close();
 }
 
@@ -422,7 +449,7 @@ async function createVoucher() {
   if (!code) { msg.className='msg error'; msg.textContent='Code requis.'; return; }
   const res=await fetch('/api/vouchers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,duration_h,max_uses,location_id:location_id||null})});
   const data=await res.json();
-  if (res.ok) { msg.className='msg success'; msg.textContent='Voucher créé !'; loadVouchers(); }
+  if (res.ok) { msg.className='msg success'; msg.textContent='Voucher cree !'; loadVouchers(); }
   else { msg.className='msg error'; msg.textContent=data.error||'Erreur.'; }
 }
 
@@ -434,7 +461,7 @@ async function createLocation() {
   if (!name) { msg.className='msg error'; msg.textContent='Nom requis.'; return; }
   const res=await fetch('/api/locations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,owner_name,address})});
   const data=await res.json();
-  if (res.ok) { msg.className='msg success'; msg.textContent='Endroit ajouté !'; loadLocations(); }
+  if (res.ok) { msg.className='msg success'; msg.textContent='Endroit ajoute !'; loadLocations(); }
   else { msg.className='msg error'; msg.textContent=data.error||'Erreur.'; }
 }
 
@@ -446,7 +473,7 @@ async function createAdmin() {
   if (!username||!password||!location_id) { msg.className='msg error'; msg.textContent='Tous les champs sont requis.'; return; }
   const res=await fetch('/api/admins',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password,location_id})});
   const data=await res.json();
-  if (res.ok) { msg.className='msg success'; msg.textContent='Admin créé !'; loadAdmins(); }
+  if (res.ok) { msg.className='msg success'; msg.textContent='Admin cree !'; loadAdmins(); }
   else { msg.className='msg error'; msg.textContent=data.error||'Erreur.'; }
 }
 
