@@ -203,11 +203,11 @@ async function doLogin() {
   const username = document.getElementById('loginUser').value.trim();
   const password = document.getElementById('loginPass').value.trim();
   const msg = document.getElementById('loginMsg');
-  if (!username||!password) { msg.className='msg error'; msg.textContent='Remplis tous les champs.'; return; }
+  if (!username || !password) { msg.className='msg error'; msg.textContent='Remplis tous les champs.'; return; }
   try {
     const res = await fetch('/api/admins?action=login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username,password}) });
     const data = await res.json();
-    if (res.ok&&data.success) {
+    if (res.ok && data.success) {
       currentAdmin = data.admin;
       document.getElementById('loginPage').style.display='none';
       document.getElementById('dashPage').style.display='block';
@@ -218,60 +218,88 @@ async function doLogin() {
   } catch(e) { msg.className='msg error'; msg.textContent='Erreur de connexion.'; }
 }
 
-function logout() { currentAdmin=null; document.getElementById('loginPage').style.display='flex'; document.getElementById('dashPage').style.display='none'; }
+function logout() {
+  currentAdmin=null;
+  document.getElementById('loginPage').style.display='flex';
+  document.getElementById('dashPage').style.display='none';
+}
 
-function showTab(name,el) {
+function showTab(name, el) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   el.classList.add('active');
 }
 
-function showVoucherTab(name,el) {
+function showVoucherTab(name, el) {
   document.getElementById('vSingle').style.display=name==='single'?'block':'none';
   document.getElementById('vBulk').style.display=name==='bulk'?'block':'none';
   document.querySelectorAll('.tab-inner').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
 }
 
-async function loadAll() { loadVouchers(); loadSessions(); loadLocations(); if(currentAdmin&¤tAdmin.is_super) loadAdmins(); }
+async function loadAll() { loadVouchers(); loadSessions(); loadLocations(); if(currentAdmin&&currentAdmin.is_super) loadAdmins(); }
 
 async function loadVouchers() {
   const res = await fetch('/api/vouchers').catch(()=>null);
-  const data = res?await res.json().catch(()=>[]):[];
+  const data = res ? await res.json().catch(()=>[]) : [];
   const tbody = document.getElementById('voucherList');
   if (!Array.isArray(data)) { tbody.innerHTML='<tr><td colspan="5">Aucun voucher</td></tr>'; return; }
   document.getElementById('statVouchers').textContent=data.filter(v=>v.is_active).length;
-  tbody.innerHTML=data.map(v=>`<tr><td><strong>${v.code}</strong></td><td>${v.duration_h}h</td><td>${v.used_count}/${v.max_uses}</td><td><span class="badge ${v.is_active?'badge-green':'badge-red'}">${v.is_active?'Actif':'Inactif'}</span></td><td><div class="actions"><button class="btn-sm ${v.is_active?'btn-orange':'btn-green'}" onclick="toggleVoucher('${v.id}',${!v.is_active})">${v.is_active?'Bloquer':'Activer'}</button></div></td></tr>`).join('');
+  tbody.innerHTML=data.map(v=>`<tr>
+    <td><strong>${v.code}</strong></td>
+    <td>${v.duration_h}h</td>
+    <td>${v.used_count}/${v.max_uses}</td>
+    <td><span class="badge ${v.is_active?'badge-green':'badge-red'}">${v.is_active?'Actif':'Inactif'}</span></td>
+    <td><div class="actions"><button class="btn-sm ${v.is_active?'btn-orange':'btn-green'}" onclick="toggleVoucher('${v.id}',${!v.is_active})">${v.is_active?'Bloquer':'Activer'}</button></div></td>
+  </tr>`).join('');
 }
 
 async function loadSessions() {
   const res = await fetch('/api/sessions').catch(()=>null);
-  const data = res?await res.json().catch(()=>[]):[];
+  const data = res ? await res.json().catch(()=>[]) : [];
   const tbody = document.getElementById('sessionList');
   if (!Array.isArray(data)) { tbody.innerHTML='<tr><td colspan="6">Aucune session</td></tr>'; return; }
   document.getElementById('statSessions').textContent=data.filter(s=>s.is_active).length;
-  tbody.innerHTML=data.map(s=>`<tr><td>${s.mac_address}</td><td>${s.ip_address||'-'}</td><td>${new Date(s.started_at).toLocaleString()}</td><td>${new Date(s.expires_at).toLocaleString()}</td><td><span class="badge ${s.is_active?'badge-green':'badge-red'}">${s.is_active?'Active':'Expirée'}</span></td><td><div class="actions"><button class="btn-sm btn-red" onclick="killSession('${s.id}')">Déconnecter</button></div></td></tr>`).join('');
+  tbody.innerHTML=data.map(s=>`<tr>
+    <td>${s.mac_address}</td><td>${s.ip_address||'-'}</td>
+    <td>${new Date(s.started_at).toLocaleString()}</td>
+    <td>${new Date(s.expires_at).toLocaleString()}</td>
+    <td><span class="badge ${s.is_active?'badge-green':'badge-red'}">${s.is_active?'Active':'Expirée'}</span></td>
+    <td><div class="actions"><button class="btn-sm btn-red" onclick="killSession('${s.id}')">Déconnecter</button></div></td>
+  </tr>`).join('');
 }
 
 async function loadLocations() {
   const res = await fetch('/api/locations').catch(()=>null);
-  const data = res?await res.json().catch(()=>[]):[];
+  const data = res ? await res.json().catch(()=>[]) : [];
   document.getElementById('statLocations').textContent=Array.isArray(data)?data.length:0;
   const opts=Array.isArray(data)?data.map(l=>`<option value="${l.id}">${l.name}</option>`).join(''):'';
-  ['vLocation','bLocation','aLocation'].forEach(id=>{ document.getElementById(id).innerHTML='<option value="">-- Choisir --</option>'+opts; });
+  ['vLocation','bLocation','aLocation'].forEach(id=>{
+    document.getElementById(id).innerHTML='<option value="">-- Choisir --</option>'+opts;
+  });
   const tbody=document.getElementById('locationList');
   if (!Array.isArray(data)) return;
-  tbody.innerHTML=data.map(l=>`<tr><td><strong>${l.name}</strong></td><td>${l.owner_name||'-'}</td><td>${l.address||'-'}</td><td><span class="badge ${l.is_active?'badge-green':'badge-red'}">${l.is_active?'Actif':'Bloqué'}</span></td><td><div class="actions"><button class="btn-sm ${l.is_active?'btn-orange':'btn-green'}" onclick="toggleLocation('${l.id}',${!l.is_active})">${l.is_active?'Bloquer':'Activer'}</button></div></td></tr>`).join('');
+  tbody.innerHTML=data.map(l=>`<tr>
+    <td><strong>${l.name}</strong></td><td>${l.owner_name||'-'}</td><td>${l.address||'-'}</td>
+    <td><span class="badge ${l.is_active?'badge-green':'badge-red'}">${l.is_active?'Actif':'Bloqué'}</span></td>
+    <td><div class="actions"><button class="btn-sm ${l.is_active?'btn-orange':'btn-green'}" onclick="toggleLocation('${l.id}',${!l.is_active})">${l.is_active?'Bloquer':'Activer'}</button></div></td>
+  </tr>`).join('');
 }
 
 async function loadAdmins() {
   const res = await fetch('/api/admins').catch(()=>null);
-  const data = res?await res.json().catch(()=>[]):[];
+  const data = res ? await res.json().catch(()=>[]) : [];
   document.getElementById('statAdmins').textContent=Array.isArray(data)?data.filter(a=>a.is_active).length:0;
   const tbody=document.getElementById('adminList');
   if (!Array.isArray(data)) return;
-  tbody.innerHTML=data.map(a=>`<tr><td>${a.username}</td><td><span class="badge ${a.is_super?'badge-blue':'badge-green'}">${a.is_super?'Super Admin':'Admin Local'}</span></td><td>${a.locations?a.locations.name:'Tous'}</td><td><span class="badge ${a.is_active?'badge-green':'badge-red'}">${a.is_active?'Actif':'Bloqué'}</span></td><td><div class="actions">${!a.is_super?`<button class="btn-sm ${a.is_active?'btn-orange':'btn-green'}" onclick="toggleAdmin('${a.id}',${!a.is_active})">${a.is_active?'Bloquer':'Activer'}</button>`:''}</div></td></tr>`).join('');
+  tbody.innerHTML=data.map(a=>`<tr>
+    <td>${a.username}</td>
+    <td><span class="badge ${a.is_super?'badge-blue':'badge-green'}">${a.is_super?'Super Admin':'Admin Local'}</span></td>
+    <td>${a.locations?a.locations.name:'Tous'}</td>
+    <td><span class="badge ${a.is_active?'badge-green':'badge-red'}">${a.is_active?'Actif':'Bloqué'}</span></td>
+    <td><div class="actions">${!a.is_super?`<button class="btn-sm ${a.is_active?'btn-orange':'btn-green'}" onclick="toggleAdmin('${a.id}',${!a.is_active})">${a.is_active?'Bloquer':'Activer'}</button>`:''}</div></td>
+  </tr>`).join('');
 }
 
 async function generateBulk() {
@@ -286,17 +314,17 @@ async function generateBulk() {
   const res=await fetch('/api/vouchers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({quantity,duration_h,max_uses,prefix,location_id:location_id||null})});
   const data=await res.json();
   if (res.ok&&data.success) {
-    msg.className='msg success'; msg.textContent=`✅ ${data.count} vouchers créés !`;
+    msg.className='msg success'; msg.textContent='✅ '+data.count+' vouchers créés !';
     lastBulkCodes=data.vouchers.map(v=>v.code);
     document.getElementById('bulkResult').style.display='block';
-    document.getElementById('bulkCodes').innerHTML=lastBulkCodes.map(c=>`<span class="bulk-code">${c}</span>`).join('');
+    document.getElementById('bulkCodes').innerHTML=lastBulkCodes.map(c=>'<span class="bulk-code">'+c+'</span>').join('');
     loadVouchers();
   } else { msg.className='msg error'; msg.textContent=data.error||'Erreur.'; }
 }
 
 function printCodes() {
   const win=window.open('','_blank');
-  win.document.write(`<html><head><title>Vouchers WiFi</title><style>body{font-family:sans-serif;padding:2rem}h2{margin-bottom:1rem}.code{display:inline-block;border:2px dashed #4f46e5;padding:10px 20px;margin:8px;border-radius:8px;font-size:18px;font-weight:bold;font-family:monospace;color:#1a1a2e}@media print{.no-print{display:none}}</style></head><body><h2>Codes WiFi Hotspot</h2><button class="no-print" onclick="window.print()" style="margin-bottom:1rem;padding:8px 16px;cursor:pointer">🖨️ Imprimer</button>${lastBulkCodes.map(c=>`<div class="code">${c}</div>`).join('')}</body></html>`);
+  win.document.write('<html><head><title>Vouchers WiFi</title><style>body{font-family:sans-serif;padding:2rem}h2{margin-bottom:1rem}.code{display:inline-block;border:2px dashed #4f46e5;padding:10px 20px;margin:8px;border-radius:8px;font-size:18px;font-weight:bold;font-family:monospace;color:#1a1a2e}@media print{.no-print{display:none}}</style></head><body><h2>Codes WiFi Hotspot</h2><button class="no-print" onclick="window.print()" style="margin-bottom:1rem;padding:8px 16px;cursor:pointer">🖨️ Imprimer</button>'+lastBulkCodes.map(c=>'<div class="code">'+c+'</div>').join('')+'</body></html>');
   win.document.close();
 }
 
