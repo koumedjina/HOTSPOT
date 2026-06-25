@@ -7,49 +7,97 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: sans-serif; background: #f0f4f8; min-height: 100vh; }
-    .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-    .card { background: white; border-radius: 16px; padding: 2rem; width: 100%; max-width: 380px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-    .card h2 { font-size: 20px; color: #1a1a2e; margin-bottom: 1.5rem; text-align: center; }
-    label { font-size: 13px; color: #555; display: block; margin-bottom: 6px; }
-    input, select { width: 100%; padding: 10px 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; outline: none; margin-bottom: 1rem; }
-    input:focus, select:focus { border-color: #4f46e5; }
-    .btn { width: 100%; padding: 12px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: 500; }
-    .btn:hover { background: #4338ca; }
-    .btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 6px; border: none; cursor: pointer; color: white; }
-    .btn-green { background: #16a34a; } .btn-red { background: #dc2626; }
-    .btn-blue { background: #2563eb; } .btn-orange { background: #ea580c; }
-    .btn-purple { background: #7c3aed; }
-    .msg { margin-top: 1rem; padding: 10px; border-radius: 8px; font-size: 13px; text-align: center; display: none; }
-    .msg.error { background: #fef2f2; color: #dc2626; display: block; }
-    .msg.success { background: #f0fdf4; color: #16a34a; display: block; }
-    nav { background: #1a1a2e; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-    nav h1 { color: white; font-size: 18px; }
-    nav span { color: #a5b4fc; font-size: 13px; }
-    nav button { background: transparent; border: 1px solid #a5b4fc; color: #a5b4fc; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; }
-    .main { padding: 2rem; max-width: 1100px; margin: 0 auto; }
-    .tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .tab { padding: 8px 18px; border-radius: 8px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 13px; color: #555; }
-    .tab.active { background: #4f46e5; color: white; border-color: #4f46e5; }
-    .section { display: none; } .section.active { display: block; }
+
+    /* LOGIN */
+    .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #1a1a2e, #4f46e5); }
+    .login-card { background: white; border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 380px; box-shadow: 0 8px 40px rgba(0,0,0,0.2); }
+    .login-card h2 { font-size: 22px; color: #1a1a2e; margin-bottom: 0.5rem; text-align: center; }
+    .login-card p { font-size: 13px; color: #888; text-align: center; margin-bottom: 1.5rem; }
+
+    /* LAYOUT */
+    .app { display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: 240px; background: #1a1a2e; min-height: 100vh; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; }
+    .sidebar-logo { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .sidebar-logo h1 { color: white; font-size: 18px; font-weight: 700; }
+    .sidebar-logo p { color: #a5b4fc; font-size: 12px; margin-top: 2px; }
+    .sidebar-nav { padding: 1rem 0; flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #94a3b8; font-size: 14px; cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
+    .nav-item.active { background: rgba(79,70,229,0.2); color: white; border-left-color: #4f46e5; }
+    .nav-item .icon { font-size: 18px; width: 24px; text-align: center; }
+    .sidebar-footer { padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.08); }
+    .user-info { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: #4f46e5; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 600; }
+    .user-name { color: white; font-size: 13px; font-weight: 500; }
+    .user-role { color: #a5b4fc; font-size: 11px; }
+    .logout-btn { margin-top: 10px; width: 100%; padding: 8px; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #94a3b8; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .logout-btn:hover { background: rgba(255,255,255,0.05); color: white; }
+
+    /* MAIN CONTENT */
+    .main-content { margin-left: 240px; flex: 1; padding: 2rem; }
+    .page-title { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 1.5rem; }
+
+    /* SECTIONS */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* STATS GRID */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-    .box { background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .box h3 { font-size: 13px; color: #555; margin-bottom: 4px; }
-    .box .val { font-size: 28px; font-weight: 600; color: #1a1a2e; }
-    table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    th { background: #f8fafc; padding: 12px 16px; text-align: left; font-size: 12px; color: #888; text-transform: uppercase; }
-    td { padding: 12px 16px; font-size: 13px; color: #333; border-top: 1px solid #f0f0f0; }
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
-    .badge-green { background: #dcfce7; color: #16a34a; } .badge-red { background: #fee2e2; color: #dc2626; }
-    .badge-blue { background: #dbeafe; color: #2563eb; } .badge-orange { background: #ffedd5; color: #ea580c; }
+    .stat-box { background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid #4f46e5; }
+    .stat-box.green { border-left-color: #16a34a; }
+    .stat-box.orange { border-left-color: #ea580c; }
+    .stat-box.blue { border-left-color: #2563eb; }
+    .stat-box h3 { font-size: 12px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-box .val { font-size: 32px; font-weight: 700; color: #1a1a2e; }
+
+    /* FORMS */
+    label { font-size: 13px; color: #555; display: block; margin-bottom: 6px; margin-top: 12px; }
+    input, select { width: 100%; padding: 10px 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; outline: none; }
+    input:focus, select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
     .form-box { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 1.5rem; }
-    .form-box h3 { font-size: 15px; font-weight: 600; color: #1a1a2e; margin-bottom: 1rem; }
-    .section-title { font-size: 18px; font-weight: 600; color: #1a1a2e; margin-bottom: 1rem; }
-    .actions { display: flex; gap: 6px; }
+    .form-box h3 { font-size: 15px; font-weight: 600; color: #1a1a2e; margin-bottom: 0.5rem; }
+    .form-box p { font-size: 12px; color: #888; margin-bottom: 1rem; }
+
+    /* BUTTONS */
+    .btn { padding: 10px 20px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: 500; margin-top: 14px; }
+    .btn:hover { background: #4338ca; }
+    .btn-full { width: 100%; }
+    .btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 6px; border: none; cursor: pointer; color: white; }
+    .btn-green { background: #16a34a; } .btn-red { background: #dc2626; }
+    .btn-orange { background: #ea580c; } .btn-purple { background: #7c3aed; }
+
+    /* TABS INNER */
     .tabs-inner { display: flex; gap: 6px; margin-bottom: 1rem; }
-    .tab-inner { padding: 6px 14px; border-radius: 6px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 12px; color: #555; }
-    .tab-inner.active { background: #7c3aed; color: white; border-color: #7c3aed; }
+    .tab-inner { padding: 7px 16px; border-radius: 6px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 13px; color: #555; }
+    .tab-inner.active { background: #4f46e5; color: white; border-color: #4f46e5; }
+
+    /* TABLE */
+    .table-box { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .table-header { padding: 1rem 1.25rem; border-bottom: 1px solid #f0f0f0; font-size: 15px; font-weight: 600; color: #1a1a2e; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #f8fafc; padding: 10px 16px; text-align: left; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 12px 16px; font-size: 13px; color: #333; border-top: 1px solid #f5f5f5; }
+    tr:hover td { background: #fafafa; }
+
+    /* BADGES */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+    .badge-green { background: #dcfce7; color: #16a34a; }
+    .badge-red { background: #fee2e2; color: #dc2626; }
+    .badge-blue { background: #dbeafe; color: #2563eb; }
+
+    /* ACTIONS */
+    .actions { display: flex; gap: 6px; }
+
+    /* MSG */
+    .msg { margin-top: 12px; padding: 10px; border-radius: 8px; font-size: 13px; display: none; }
+    .msg.error { background: #fef2f2; color: #dc2626; display: block; }
+    .msg.success { background: #f0fdf4; color: #16a34a; display: block; }
+
+    /* BULK */
     .bulk-result { background: #f8fafc; border-radius: 8px; padding: 1rem; margin-top: 1rem; max-height: 200px; overflow-y: auto; }
     .bulk-code { display: inline-block; font-family: monospace; font-size: 13px; background: #e0e7ff; color: #3730a3; padding: 3px 8px; border-radius: 4px; margin: 3px; }
     .print-btn { margin-top: 10px; padding: 8px 16px; background: #1a1a2e; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
@@ -57,48 +105,65 @@
 </head>
 <body>
 
+<!-- LOGIN -->
 <div class="login-wrap" id="loginPage">
-  <div class="card">
-    <h2>🔐 Dashboard Hotspot</h2>
+  <div class="login-card">
+    <h2>🔐 Hotspot Admin</h2>
+    <p>Connectez-vous pour gérer votre réseau</p>
     <label>Nom d'utilisateur</label>
     <input type="text" id="loginUser" placeholder="superadmin" />
     <label>Mot de passe</label>
     <input type="password" id="loginPass" placeholder="••••••••" />
-    <button class="btn" onclick="doLogin()">Se connecter</button>
+    <button class="btn btn-full" onclick="doLogin()" style="margin-top:1rem">Se connecter</button>
     <div class="msg" id="loginMsg"></div>
   </div>
 </div>
 
-<div id="dashPage" style="display:none">
-  <nav>
-    <h1>Hotspot Admin</h1>
-    <div style="display:flex;align-items:center;gap:1rem">
-      <span id="navUser"></span>
-      <button onclick="logout()">Déconnexion</button>
-    </div>
-  </nav>
+<!-- DASHBOARD -->
+<div class="app" id="dashPage" style="display:none">
 
-  <div class="main">
-    <div class="tabs">
-      <div class="tab active" onclick="showTab('stats',this)">📊 Stats</div>
-      <div class="tab" onclick="showTab('vouchers',this)">🎫 Vouchers</div>
-      <div class="tab" onclick="showTab('sessions',this)">📡 Sessions</div>
-      <div class="tab superonly" onclick="showTab('locations',this)">📍 Endroits</div>
-      <div class="tab superonly" onclick="showTab('admins',this)">👥 Admins</div>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <h1>📡 Hotspot</h1>
+      <p>Panneau d'administration</p>
     </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showTab('stats',this)"><span class="icon">📊</span> Statistiques</div>
+      <div class="nav-item" onclick="showTab('vouchers',this)"><span class="icon">🎫</span> Vouchers</div>
+      <div class="nav-item" onclick="showTab('sessions',this)"><span class="icon">📡</span> Sessions</div>
+      <div class="nav-item superonly" onclick="showTab('locations',this)"><span class="icon">📍</span> Endroits</div>
+      <div class="nav-item superonly" onclick="showTab('admins',this)"><span class="icon">👥</span> Admins</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">S</div>
+        <div>
+          <div class="user-name" id="userName">-</div>
+          <div class="user-role" id="userRole">-</div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="logout()">Se déconnecter</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content">
 
     <!-- STATS -->
     <div class="section active" id="tab-stats">
+      <div class="page-title">Statistiques</div>
       <div class="grid">
-        <div class="box"><h3>Vouchers actifs</h3><div class="val" id="statVouchers">-</div></div>
-        <div class="box"><h3>Sessions actives</h3><div class="val" id="statSessions">-</div></div>
-        <div class="box"><h3>Endroits</h3><div class="val" id="statLocations">-</div></div>
-        <div class="box"><h3>Admins actifs</h3><div class="val" id="statAdmins">-</div></div>
+        <div class="stat-box"><h3>Vouchers actifs</h3><div class="val" id="statVouchers">-</div></div>
+        <div class="stat-box green"><h3>Sessions actives</h3><div class="val" id="statSessions">-</div></div>
+        <div class="stat-box orange"><h3>Endroits</h3><div class="val" id="statLocations">-</div></div>
+        <div class="stat-box blue"><h3>Admins actifs</h3><div class="val" id="statAdmins">-</div></div>
       </div>
     </div>
 
     <!-- VOUCHERS -->
     <div class="section" id="tab-vouchers">
+      <div class="page-title">Vouchers</div>
       <div class="tabs-inner">
         <div class="tab-inner active" onclick="showVoucherTab('single',this)">Créer un voucher</div>
         <div class="tab-inner" onclick="showVoucherTab('bulk',this)">⚡ Générer en masse</div>
@@ -106,20 +171,22 @@
 
       <div class="form-box" id="vSingle">
         <h3>Créer un voucher</h3>
+        <p>Créer un code d'accès WiFi unique</p>
         <div class="form-row">
           <div><label>Code</label><input type="text" id="vCode" placeholder="FREE1H" /></div>
           <div><label>Durée (heures)</label><input type="number" id="vDuration" value="1" min="1" /></div>
         </div>
         <div class="form-row">
           <div><label>Utilisations max</label><input type="number" id="vMaxUses" value="1" min="1" /></div>
-          <div><label>Endroit</label><select id="vLocation"><option value="">-- Choisir --</option></select></div>
+          <div><label>Endroit</label><select id="vLocation"><option value="">-- Tous les endroits --</option></select></div>
         </div>
-        <button class="btn" style="width:auto;padding:10px 24px" onclick="createVoucher()">Créer</button>
+        <button class="btn" onclick="createVoucher()">Créer le voucher</button>
         <div class="msg" id="vMsg"></div>
       </div>
 
       <div class="form-box" id="vBulk" style="display:none">
-        <h3>⚡ Générer plusieurs vouchers automatiquement</h3>
+        <h3>⚡ Générer en masse</h3>
+        <p>Créer plusieurs codes WiFi automatiquement en un seul clic</p>
         <div class="form-row-3">
           <div><label>Quantité</label><input type="number" id="bQuantity" value="10" min="1" max="100" /></div>
           <div><label>Durée (heures)</label><input type="number" id="bDuration" value="1" min="1" /></div>
@@ -127,9 +194,9 @@
         </div>
         <div class="form-row">
           <div><label>Préfixe (optionnel)</label><input type="text" id="bPrefix" placeholder="ex: HOTEL" /></div>
-          <div><label>Endroit</label><select id="bLocation"><option value="">-- Choisir --</option></select></div>
+          <div><label>Endroit</label><select id="bLocation"><option value="">-- Tous les endroits --</option></select></div>
         </div>
-        <button class="btn" style="width:auto;padding:10px 24px;background:#7c3aed" onclick="generateBulk()">⚡ Générer</button>
+        <button class="btn" style="background:#7c3aed" onclick="generateBulk()">⚡ Générer les vouchers</button>
         <div class="msg" id="bMsg"></div>
         <div id="bulkResult" style="display:none">
           <div class="bulk-result" id="bulkCodes"></div>
@@ -137,61 +204,75 @@
         </div>
       </div>
 
-      <p class="section-title">Liste des vouchers</p>
-      <table>
-        <thead><tr><th>Code</th><th>Durée</th><th>Utilisations</th><th>Statut</th><th>Actions</th></tr></thead>
-        <tbody id="voucherList"></tbody>
-      </table>
+      <div class="table-box">
+        <div class="table-header">Liste des vouchers</div>
+        <table>
+          <thead><tr><th>Code</th><th>Durée</th><th>Utilisations</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="voucherList"></tbody>
+        </table>
+      </div>
     </div>
 
     <!-- SESSIONS -->
     <div class="section" id="tab-sessions">
-      <p class="section-title">Sessions actives</p>
-      <table>
-        <thead><tr><th>MAC</th><th>IP</th><th>Début</th><th>Expiration</th><th>Statut</th><th>Actions</th></tr></thead>
-        <tbody id="sessionList"></tbody>
-      </table>
+      <div class="page-title">Sessions actives</div>
+      <div class="table-box">
+        <div class="table-header">Clients connectés</div>
+        <table>
+          <thead><tr><th>MAC</th><th>IP</th><th>Début</th><th>Expiration</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="sessionList"></tbody>
+        </table>
+      </div>
     </div>
 
     <!-- LOCATIONS -->
     <div class="section" id="tab-locations">
+      <div class="page-title">Endroits</div>
       <div class="form-box">
         <h3>Ajouter un endroit</h3>
+        <p>Hôtel, restaurant, cybercafé...</p>
         <div class="form-row">
           <div><label>Nom</label><input type="text" id="lName" placeholder="Hotel ABC" /></div>
           <div><label>Responsable</label><input type="text" id="lOwner" placeholder="Jean" /></div>
         </div>
         <label>Adresse</label>
         <input type="text" id="lAddress" placeholder="Rue 1, Ville" />
-        <button class="btn" style="width:auto;padding:10px 24px" onclick="createLocation()">Ajouter</button>
+        <button class="btn" onclick="createLocation()">Ajouter l'endroit</button>
         <div class="msg" id="lMsg"></div>
       </div>
-      <p class="section-title">Liste des endroits</p>
-      <table>
-        <thead><tr><th>Nom</th><th>Responsable</th><th>Adresse</th><th>Statut</th><th>Actions</th></tr></thead>
-        <tbody id="locationList"></tbody>
-      </table>
+      <div class="table-box">
+        <div class="table-header">Liste des endroits</div>
+        <table>
+          <thead><tr><th>Nom</th><th>Responsable</th><th>Adresse</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="locationList"></tbody>
+        </table>
+      </div>
     </div>
 
     <!-- ADMINS -->
     <div class="section" id="tab-admins">
+      <div class="page-title">Administrateurs</div>
       <div class="form-box">
         <h3>Créer un admin local</h3>
+        <p>L'admin local verra seulement son endroit</p>
         <div class="form-row">
           <div><label>Nom d'utilisateur</label><input type="text" id="aUser" placeholder="admin_hotel" /></div>
           <div><label>Mot de passe</label><input type="password" id="aPass" placeholder="••••••••" /></div>
         </div>
         <label>Endroit</label>
-        <select id="aLocation"><option value="">-- Choisir --</option></select>
-        <button class="btn" style="width:auto;padding:10px 24px" onclick="createAdmin()">Créer</button>
+        <select id="aLocation"><option value="">-- Choisir un endroit --</option></select>
+        <button class="btn" onclick="createAdmin()">Créer l'admin</button>
         <div class="msg" id="aMsg"></div>
       </div>
-      <p class="section-title">Liste des admins</p>
-      <table>
-        <thead><tr><th>Utilisateur</th><th>Rôle</th><th>Endroit</th><th>Statut</th><th>Actions</th></tr></thead>
-        <tbody id="adminList"></tbody>
-      </table>
+      <div class="table-box">
+        <div class="table-header">Liste des admins</div>
+        <table>
+          <thead><tr><th>Utilisateur</th><th>Rôle</th><th>Endroit</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="adminList"></tbody>
+        </table>
+      </div>
     </div>
+
   </div>
 </div>
 
@@ -210,8 +291,10 @@ async function doLogin() {
     if (res.ok && data.success) {
       currentAdmin = data.admin;
       document.getElementById('loginPage').style.display='none';
-      document.getElementById('dashPage').style.display='block';
-      document.getElementById('navUser').textContent=username+(data.admin.is_super?' (Super Admin)':'');
+      document.getElementById('dashPage').style.display='flex';
+      document.getElementById('userName').textContent=username;
+      document.getElementById('userRole').textContent=data.admin.is_super?'Super Admin':'Admin Local';
+      document.getElementById('userAvatar').textContent=username[0].toUpperCase();
       if (!data.admin.is_super) document.querySelectorAll('.superonly').forEach(el=>el.style.display='none');
       loadAll();
     } else { msg.className='msg error'; msg.textContent=data.error||'Identifiants incorrects.'; }
@@ -226,7 +309,7 @@ function logout() {
 
 function showTab(name, el) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   el.classList.add('active');
 }
@@ -276,10 +359,11 @@ async function loadLocations() {
   document.getElementById('statLocations').textContent=Array.isArray(data)?data.length:0;
   const opts=Array.isArray(data)?data.map(l=>`<option value="${l.id}">${l.name}</option>`).join(''):'';
   ['vLocation','bLocation','aLocation'].forEach(id=>{
-    document.getElementById(id).innerHTML='<option value="">-- Choisir --</option>'+opts;
+    const el=document.getElementById(id);
+    if(el) el.innerHTML='<option value="">-- Choisir --</option>'+opts;
   });
   const tbody=document.getElementById('locationList');
-  if (!Array.isArray(data)) return;
+  if (!Array.isArray(data)||!tbody) return;
   tbody.innerHTML=data.map(l=>`<tr>
     <td><strong>${l.name}</strong></td><td>${l.owner_name||'-'}</td><td>${l.address||'-'}</td>
     <td><span class="badge ${l.is_active?'badge-green':'badge-red'}">${l.is_active?'Actif':'Bloqué'}</span></td>
@@ -292,7 +376,7 @@ async function loadAdmins() {
   const data = res ? await res.json().catch(()=>[]) : [];
   document.getElementById('statAdmins').textContent=Array.isArray(data)?data.filter(a=>a.is_active).length:0;
   const tbody=document.getElementById('adminList');
-  if (!Array.isArray(data)) return;
+  if (!Array.isArray(data)||!tbody) return;
   tbody.innerHTML=data.map(a=>`<tr>
     <td>${a.username}</td>
     <td><span class="badge ${a.is_super?'badge-blue':'badge-green'}">${a.is_super?'Super Admin':'Admin Local'}</span></td>
