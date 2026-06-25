@@ -7,17 +7,11 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: sans-serif; background: #f0f4f8; min-height: 100vh; }
-
-    /* LOGIN */
     .login-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #1a1a2e, #4f46e5); }
     .login-card { background: white; border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 380px; box-shadow: 0 8px 40px rgba(0,0,0,0.2); }
     .login-card h2 { font-size: 22px; color: #1a1a2e; margin-bottom: 0.5rem; text-align: center; }
     .login-card p { font-size: 13px; color: #888; text-align: center; margin-bottom: 1.5rem; }
-
-    /* LAYOUT */
     .app { display: flex; min-height: 100vh; }
-
-    /* SIDEBAR */
     .sidebar { width: 240px; background: #1a1a2e; min-height: 100vh; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; }
     .sidebar-logo { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
     .sidebar-logo h1 { color: white; font-size: 18px; font-weight: 700; }
@@ -34,25 +28,14 @@
     .user-role { color: #a5b4fc; font-size: 11px; }
     .logout-btn { margin-top: 10px; width: 100%; padding: 8px; background: transparent; border: 1px solid rgba(255,255,255,0.15); color: #94a3b8; border-radius: 6px; cursor: pointer; font-size: 12px; }
     .logout-btn:hover { background: rgba(255,255,255,0.05); color: white; }
-
-    /* MAIN CONTENT */
     .main-content { margin-left: 240px; flex: 1; padding: 2rem; }
     .page-title { font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 1.5rem; }
-
-    /* SECTIONS */
-    .section { display: none; }
-    .section.active { display: block; }
-
-    /* STATS GRID */
+    .section { display: none; } .section.active { display: block; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
     .stat-box { background: white; border-radius: 12px; padding: 1.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-left: 4px solid #4f46e5; }
-    .stat-box.green { border-left-color: #16a34a; }
-    .stat-box.orange { border-left-color: #ea580c; }
-    .stat-box.blue { border-left-color: #2563eb; }
+    .stat-box.green { border-left-color: #16a34a; } .stat-box.orange { border-left-color: #ea580c; } .stat-box.blue { border-left-color: #2563eb; }
     .stat-box h3 { font-size: 12px; color: #888; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
     .stat-box .val { font-size: 32px; font-weight: 700; color: #1a1a2e; }
-
-    /* FORMS */
     label { font-size: 13px; color: #555; display: block; margin-bottom: 6px; margin-top: 12px; }
     input, select { width: 100%; padding: 10px 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; outline: none; }
     input:focus, select:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
@@ -61,46 +44,38 @@
     .form-box { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 1.5rem; }
     .form-box h3 { font-size: 15px; font-weight: 600; color: #1a1a2e; margin-bottom: 0.5rem; }
     .form-box p { font-size: 12px; color: #888; margin-bottom: 1rem; }
-
-    /* BUTTONS */
     .btn { padding: 10px 20px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: 500; margin-top: 14px; }
     .btn:hover { background: #4338ca; }
     .btn-full { width: 100%; }
-    .btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 6px; border: none; cursor: pointer; color: white; }
-    .btn-green { background: #16a34a; } .btn-red { background: #dc2626; }
-    .btn-orange { background: #ea580c; } .btn-purple { background: #7c3aed; }
-
-    /* TABS INNER */
     .tabs-inner { display: flex; gap: 6px; margin-bottom: 1rem; }
     .tab-inner { padding: 7px 16px; border-radius: 6px; border: 1px solid #e0e0e0; background: white; cursor: pointer; font-size: 13px; color: #555; }
     .tab-inner.active { background: #4f46e5; color: white; border-color: #4f46e5; }
-
-    /* TABLE */
     .table-box { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
     .table-header { padding: 1rem 1.25rem; border-bottom: 1px solid #f0f0f0; font-size: 15px; font-weight: 600; color: #1a1a2e; }
     table { width: 100%; border-collapse: collapse; }
     th { background: #f8fafc; padding: 10px 16px; text-align: left; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
     td { padding: 12px 16px; font-size: 13px; color: #333; border-top: 1px solid #f5f5f5; }
     tr:hover td { background: #fafafa; }
-
-    /* BADGES */
     .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
-    .badge-green { background: #dcfce7; color: #16a34a; }
-    .badge-red { background: #fee2e2; color: #dc2626; }
-    .badge-blue { background: #dbeafe; color: #2563eb; }
-
-    /* ACTIONS */
-    .actions { display: flex; gap: 6px; }
-
-    /* MSG */
+    .badge-green { background: #dcfce7; color: #16a34a; } .badge-red { background: #fee2e2; color: #dc2626; } .badge-blue { background: #dbeafe; color: #2563eb; }
     .msg { margin-top: 12px; padding: 10px; border-radius: 8px; font-size: 13px; display: none; }
     .msg.error { background: #fef2f2; color: #dc2626; display: block; }
     .msg.success { background: #f0fdf4; color: #16a34a; display: block; }
-
-    /* BULK */
     .bulk-result { background: #f8fafc; border-radius: 8px; padding: 1rem; margin-top: 1rem; max-height: 200px; overflow-y: auto; }
     .bulk-code { display: inline-block; font-family: monospace; font-size: 13px; background: #e0e7ff; color: #3730a3; padding: 3px 8px; border-radius: 4px; margin: 3px; }
     .print-btn { margin-top: 10px; padding: 8px 16px; background: #1a1a2e; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
+
+    /* TOGGLE SWITCH */
+    .toggle-wrap { display: flex; align-items: center; gap: 8px; }
+    .toggle { position: relative; width: 44px; height: 24px; cursor: pointer; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #dc2626; border-radius: 24px; transition: 0.3s; }
+    .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+    .toggle input:checked + .toggle-slider { background: #16a34a; }
+    .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+    .toggle-label { font-size: 12px; font-weight: 500; }
+    .toggle-label.on { color: #16a34a; }
+    .toggle-label.off { color: #dc2626; }
   </style>
 </head>
 <body>
@@ -121,8 +96,6 @@
 
 <!-- DASHBOARD -->
 <div class="app" id="dashPage" style="display:none">
-
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-logo">
       <h1>📡 Hotspot</h1>
@@ -147,7 +120,6 @@
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="main-content">
 
     <!-- STATS -->
@@ -168,7 +140,6 @@
         <div class="tab-inner active" onclick="showVoucherTab('single',this)">Créer un voucher</div>
         <div class="tab-inner" onclick="showVoucherTab('bulk',this)">⚡ Générer en masse</div>
       </div>
-
       <div class="form-box" id="vSingle">
         <h3>Créer un voucher</h3>
         <p>Créer un code d'accès WiFi unique</p>
@@ -183,7 +154,6 @@
         <button class="btn" onclick="createVoucher()">Créer le voucher</button>
         <div class="msg" id="vMsg"></div>
       </div>
-
       <div class="form-box" id="vBulk" style="display:none">
         <h3>⚡ Générer en masse</h3>
         <p>Créer plusieurs codes WiFi automatiquement en un seul clic</p>
@@ -203,11 +173,10 @@
           <button class="print-btn" onclick="printCodes()">🖨️ Imprimer les codes</button>
         </div>
       </div>
-
       <div class="table-box">
         <div class="table-header">Liste des vouchers</div>
         <table>
-          <thead><tr><th>Code</th><th>Durée</th><th>Utilisations</th><th>Statut</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Code</th><th>Durée</th><th>Utilisations</th><th>Statut</th><th>Actif</th></tr></thead>
           <tbody id="voucherList"></tbody>
         </table>
       </div>
@@ -219,7 +188,7 @@
       <div class="table-box">
         <div class="table-header">Clients connectés</div>
         <table>
-          <thead><tr><th>MAC</th><th>IP</th><th>Début</th><th>Expiration</th><th>Statut</th><th>Actions</th></tr></thead>
+          <thead><tr><th>MAC</th><th>IP</th><th>Début</th><th>Expiration</th><th>Statut</th><th>Action</th></tr></thead>
           <tbody id="sessionList"></tbody>
         </table>
       </div>
@@ -243,7 +212,7 @@
       <div class="table-box">
         <div class="table-header">Liste des endroits</div>
         <table>
-          <thead><tr><th>Nom</th><th>Responsable</th><th>Adresse</th><th>Statut</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Nom</th><th>Responsable</th><th>Adresse</th><th>Actif</th></tr></thead>
           <tbody id="locationList"></tbody>
         </table>
       </div>
@@ -267,7 +236,7 @@
       <div class="table-box">
         <div class="table-header">Liste des admins</div>
         <table>
-          <thead><tr><th>Utilisateur</th><th>Rôle</th><th>Endroit</th><th>Statut</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Utilisateur</th><th>Rôle</th><th>Endroit</th><th>Actif</th></tr></thead>
           <tbody id="adminList"></tbody>
         </table>
       </div>
@@ -279,6 +248,21 @@
 <script>
 let currentAdmin = null;
 let lastBulkCodes = [];
+
+function makeToggle(id, isActive, onChangeFn) {
+  const uid = 'toggle_' + id.replace(/-/g,'');
+  setTimeout(() => {
+    const el = document.getElementById(uid);
+    if (el) el.addEventListener('change', () => onChangeFn(id, el.checked));
+  }, 50);
+  return `<div class="toggle-wrap">
+    <label class="toggle">
+      <input type="checkbox" id="${uid}" ${isActive ? 'checked' : ''}>
+      <span class="toggle-slider"></span>
+    </label>
+    <span class="toggle-label ${isActive ? 'on' : 'off'}">${isActive ? 'ON' : 'OFF'}</span>
+  </div>`;
+}
 
 async function doLogin() {
   const username = document.getElementById('loginUser').value.trim();
@@ -334,7 +318,7 @@ async function loadVouchers() {
     <td>${v.duration_h}h</td>
     <td>${v.used_count}/${v.max_uses}</td>
     <td><span class="badge ${v.is_active?'badge-green':'badge-red'}">${v.is_active?'Actif':'Inactif'}</span></td>
-    <td><div class="actions"><button class="btn-sm ${v.is_active?'btn-orange':'btn-green'}" onclick="toggleVoucher('${v.id}',${!v.is_active})">${v.is_active?'Bloquer':'Activer'}</button></div></td>
+    <td>${makeToggle(v.id, v.is_active, toggleVoucher)}</td>
   </tr>`).join('');
 }
 
@@ -349,7 +333,7 @@ async function loadSessions() {
     <td>${new Date(s.started_at).toLocaleString()}</td>
     <td>${new Date(s.expires_at).toLocaleString()}</td>
     <td><span class="badge ${s.is_active?'badge-green':'badge-red'}">${s.is_active?'Active':'Expirée'}</span></td>
-    <td><div class="actions"><button class="btn-sm btn-red" onclick="killSession('${s.id}')">Déconnecter</button></div></td>
+    <td>${makeToggle(s.id, s.is_active, toggleSession)}</td>
   </tr>`).join('');
 }
 
@@ -365,9 +349,10 @@ async function loadLocations() {
   const tbody=document.getElementById('locationList');
   if (!Array.isArray(data)||!tbody) return;
   tbody.innerHTML=data.map(l=>`<tr>
-    <td><strong>${l.name}</strong></td><td>${l.owner_name||'-'}</td><td>${l.address||'-'}</td>
-    <td><span class="badge ${l.is_active?'badge-green':'badge-red'}">${l.is_active?'Actif':'Bloqué'}</span></td>
-    <td><div class="actions"><button class="btn-sm ${l.is_active?'btn-orange':'btn-green'}" onclick="toggleLocation('${l.id}',${!l.is_active})">${l.is_active?'Bloquer':'Activer'}</button></div></td>
+    <td><strong>${l.name}</strong></td>
+    <td>${l.owner_name||'-'}</td>
+    <td>${l.address||'-'}</td>
+    <td>${makeToggle(l.id, l.is_active, toggleLocation)}</td>
   </tr>`).join('');
 }
 
@@ -381,9 +366,25 @@ async function loadAdmins() {
     <td>${a.username}</td>
     <td><span class="badge ${a.is_super?'badge-blue':'badge-green'}">${a.is_super?'Super Admin':'Admin Local'}</span></td>
     <td>${a.locations?a.locations.name:'Tous'}</td>
-    <td><span class="badge ${a.is_active?'badge-green':'badge-red'}">${a.is_active?'Actif':'Bloqué'}</span></td>
-    <td><div class="actions">${!a.is_super?`<button class="btn-sm ${a.is_active?'btn-orange':'btn-green'}" onclick="toggleAdmin('${a.id}',${!a.is_active})">${a.is_active?'Bloquer':'Activer'}</button>`:''}</div></td>
+    <td>${!a.is_super ? makeToggle(a.id, a.is_active, toggleAdmin) : '<span class="badge badge-blue">Super</span>'}</td>
   </tr>`).join('');
+}
+
+async function toggleVoucher(id, is_active) {
+  await fetch('/api/vouchers',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
+  loadVouchers();
+}
+async function toggleLocation(id, is_active) {
+  await fetch('/api/locations',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
+  loadLocations();
+}
+async function toggleAdmin(id, is_active) {
+  await fetch('/api/admins',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
+  loadAdmins();
+}
+async function toggleSession(id, is_active) {
+  await fetch('/api/sessions',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})});
+  loadSessions();
 }
 
 async function generateBulk() {
@@ -411,11 +412,6 @@ function printCodes() {
   win.document.write('<html><head><title>Vouchers WiFi</title><style>body{font-family:sans-serif;padding:2rem}h2{margin-bottom:1rem}.code{display:inline-block;border:2px dashed #4f46e5;padding:10px 20px;margin:8px;border-radius:8px;font-size:18px;font-weight:bold;font-family:monospace;color:#1a1a2e}@media print{.no-print{display:none}}</style></head><body><h2>Codes WiFi Hotspot</h2><button class="no-print" onclick="window.print()" style="margin-bottom:1rem;padding:8px 16px;cursor:pointer">🖨️ Imprimer</button>'+lastBulkCodes.map(c=>'<div class="code">'+c+'</div>').join('')+'</body></html>');
   win.document.close();
 }
-
-async function toggleAdmin(id,is_active) { await fetch('/api/admins',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})}); loadAdmins(); }
-async function toggleVoucher(id,is_active) { await fetch('/api/vouchers',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})}); loadVouchers(); }
-async function toggleLocation(id,is_active) { await fetch('/api/locations',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active})}); loadLocations(); }
-async function killSession(id) { if(!confirm('Déconnecter ce client ?')) return; await fetch('/api/sessions',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,is_active:false})}); loadSessions(); }
 
 async function createVoucher() {
   const code=document.getElementById('vCode').value.trim().toUpperCase();
